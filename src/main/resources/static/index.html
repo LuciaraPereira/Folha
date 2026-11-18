@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Folha · Biblioteca</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="layout">
+    <aside>
+        <div class="brand"><b>✳</b> folha<span>gestão de biblioteca</span></div>
+        <div class="side-label">MENU PRINCIPAL</div>
+        <nav id="nav"></nav>
+        <div class="side-bottom">
+            <div>✦ &nbsp; Mais livros.<br>&nbsp;&nbsp;&nbsp;&nbsp; Mais histórias.</div>
+            <button id="logout" class="link">Sair da conta →</button>
+        </div>
+    </aside>
+    <main class="main">
+        <header>
+            <div>
+                <div class="eyebrow">SUA BIBLIOTECA, EM ORDEM</div>
+                <h1 id="title">Visão geral</h1>
+                <p id="subtitle">Um bom dia começa com uma boa história.</p></div>
+            <div class="user" id="user"></div>
+        </header>
+        <div id="message"></div>
+        <section id="content"></section>
+        <footer>FEITO PARA QUEM ACREDITA NO PODER DAS HISTÓRIAS <span>FOLHA © BIBLIOTECA</span></footer>
+    </main>
+</div>
+<dialog id="modal">
+    <div class="modal-head">
+        <div>
+            <div class="eyebrow">NOVO REGISTRO</div>
+            <h2 id="modal-title"></h2></div>
+        <button class="close" onclick="document.querySelector('#modal').close()">×</button>
+    </div>
+    <form id="form"></form>
+</dialog>
+<script src="/app.js"></script>
+</body>
+</html>
