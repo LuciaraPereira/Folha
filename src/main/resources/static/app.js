@@ -847,3 +847,268 @@ async function buscarIsbn() {
         alert(erro.message);
     }
 } // Linha 849 COMMIT 4 Vivian gomes
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const campoQuantidade = configs.livros.fields.find( // obs: app.js linhas 979-1114 ao final do arquivo COMMIT 5 Vivian gomes
+    campo => campo[0] === 'exemplares'
+);
+
+if (campoQuantidade) {
+    campoQuantidade[1] = 'Quantidade total';
+}
+
+
+filtrarTabela = function (input) {
+    const termo = input.value
+        .trim()
+        .toLocaleLowerCase('pt-BR');
+
+    const termoSemPontuacao = termo.replace(/[.\s-]/g, '');
+
+    const buscaNumerica =
+        termoSemPontuacao.length > 0 &&
+        /^[0-9x]+$/i.test(termoSemPontuacao);
+
+    document.querySelectorAll('#content tbody tr')
+        .forEach(linha => {
+            const texto = linha.textContent
+                .toLocaleLowerCase('pt-BR');
+
+            const textoSemPontuacao =
+                texto.replace(/[.\s-]/g, '');
+
+            const encontrouTexto = texto.includes(termo);
+
+            const encontrouNumero =
+                buscaNumerica &&
+                textoSemPontuacao.includes(termoSemPontuacao);
+
+            linha.hidden = !(encontrouTexto || encontrouNumero);
+        });
+};
+
+
+const listarOriginal = list;
+
+
+list = async function (page) {
+    await listarOriginal(page);
+
+    if (page !== 'livros') {
+        return;
+    }
+
+    const campoPesquisa = document.querySelector(
+        '#content input[type="search"]'
+    );
+
+    if (campoPesquisa) {
+        campoPesquisa.placeholder =
+            'Pesquisar livro pelo título ou ISBN';
+
+        campoPesquisa.setAttribute(
+            'aria-label',
+            'Pesquisar livro pelo título ou ISBN'
+        );
+    }
+
+    const tabela = document.querySelector('#content table');
+
+    if (!tabela) {
+        return;
+    }
+
+    const emprestimos = await api('emprestimos');
+    const livros = cache.livros || [];
+
+    // A posição da quantidade segue a ordem dos campos de livros.
+    const indiceQuantidade = configs.livros.fields.findIndex(
+        campo => campo[0] === 'exemplares'
+    );
+
+    if (indiceQuantidade < 0) {
+        return;
+    }
+
+    const cabecalhos = tabela.querySelectorAll('thead th');
+
+    if (cabecalhos[indiceQuantidade]) {
+        cabecalhos[indiceQuantidade].textContent =
+            'QUANTIDADE DISPONÍVEL';
+    }
+
+    
+    const cabecalhoStatus = document.createElement('th');
+    cabecalhoStatus.textContent = 'STATUS';
+
+    const cabecalhoAcoes = tabela.querySelector(
+        'thead tr th:last-child'
+    );
+
+    cabecalhoAcoes.before(cabecalhoStatus);
+
+    const linhas = tabela.querySelectorAll('tbody tr');
+
+    linhas.forEach((linha, indice) => {
+        const livro = livros[indice];
+
+        if (!livro) {
+            return;
+        }
+
+        const quantidadeEmprestada = emprestimos.filter(
+            emprestimo =>
+                !emprestimo.dataDevolucao &&
+                emprestimo.livro?.id === livro.id
+        ).length;
+
+        const quantidadeDisponivel = Math.max(
+            0,
+            Number(livro.exemplares) - quantidadeEmprestada
+        );
+
+        const celulas = linha.querySelectorAll('td');
+
+        if (celulas[indiceQuantidade]) {
+            celulas[indiceQuantidade].textContent =
+                quantidadeDisponivel;
+        }
+
+        const celulaStatus = document.createElement('td');
+
+        celulaStatus.textContent = quantidadeDisponivel > 0
+            ? 'Disponível'
+            : 'Indisponível';
+
+        const celulaAcoes = linha.querySelector('td:last-child');
+
+        celulaAcoes.before(celulaStatus);
+    });
+};

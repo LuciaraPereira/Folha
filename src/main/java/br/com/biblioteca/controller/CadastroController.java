@@ -286,10 +286,10 @@ public class CadastroController {
     }
 
     private Livro salvarLivro(Livro item) {
-      
-
-
-      
+        if (item.id != null && item.exemplares < emprestimos.countByLivroIdAndDataDevolucaoIsNull(item.id)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "A quantidade total não pode ser menor que a quantidade já emprestada.");
+        }      
         // Remove espaços e traços para comparar o ISBN.
         String isbnInformado = item.isbn
                 .replaceAll("[-\\s]", "")
