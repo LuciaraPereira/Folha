@@ -65,3 +65,19 @@ public class EmprestimoService {
 
         return emprestimos.save(emprestimo);
     }
+
+    @Transactional
+    public Emprestimo devolver(Long id) {
+        Emprestimo emprestimo = emprestimos.findById(id)
+                .orElseThrow(
+                        () -> erro("Empréstimo não encontrado")
+                );
+
+        if (emprestimo.dataDevolucao != null) {
+            throw erro("Empréstimo já devolvido");
+        }
+
+        emprestimo.dataDevolucao = LocalDate.now();
+
+        return emprestimos.save(emprestimo);
+    }

@@ -37,3 +37,8 @@ public class EmprestimoController {
     public Emprestimo criar(@RequestBody Emprestimo item) {
         return service.criar(item);
     }
+
+    @PutMapping("/{id}/devolucao")
+    public Emprestimo devolver(@PathVariable Long id) {
+        return service.devolver(id);
+    }
