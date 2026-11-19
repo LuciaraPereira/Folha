@@ -62,3 +62,264 @@ public class CadastroController {
         this.service = service;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// =========================
+    // LIVROS
+    // =========================
+
+    @GetMapping("/livros")
+    public List<Livro> listarLivro() {
+        return service.listar(livros);
+    }
+
+    @GetMapping("/livros/{id}")
+    public Livro buscarLivro(@PathVariable Long id) {
+        return service.buscar(livros, id);
+    }
+
+    @PostMapping("/livros")
+    public Livro criarLivro(
+            @Valid @RequestBody Livro item
+    ) {
+        item.id = null;
+        return salvarLivro(item);
+    }
+
+    @PutMapping("/livros/{id}")
+    public Livro editarLivro(
+            @PathVariable Long id,
+            @Valid @RequestBody Livro item
+    ) {
+        service.buscar(livros, id);
+        item.id = id;
+
+        return salvarLivro(item);
+    }
+
+    @DeleteMapping("/livros/{id}")
+    public void excluirLivro(@PathVariable Long id) {
+        service.excluir(livros, id);
+    }
+
+    private Livro salvarLivro(Livro item) {
+      
+
+
+      
+        // Remove espaços e traços para comparar o ISBN.
+        String isbnInformado = item.isbn
+                .replaceAll("[-\\s]", "")
+                .toUpperCase(Locale.ROOT);
+
+        for (Livro cadastrado : livros.findAll()) {
+            String isbnCadastrado = cadastrado.isbn
+                    .replaceAll("[-\\s]", "")
+                    .toUpperCase(Locale.ROOT);
+
+            boolean mesmoIsbn = isbnCadastrado.equals(isbnInformado);
+
+            // Na edição, o próprio livro pode manter seu ISBN.
+            boolean outroLivro = !Objects.equals(
+                    cadastrado.id,
+                    item.id
+            );
+
+            if (mesmoIsbn && outroLivro) {
+                throw new ResponseStatusException(
+                        HttpStatus.CONFLICT,
+                        "Este ISBN já está cadastrado. "
+                                + "Procure o livro na lista para editar "
+
+                );
+            }
+        }
+
+        // Salva o ISBN sem espaços e sem traços.
+        item.isbn = isbnInformado;
+
+        return service.salvar(livros, item);
+    }
