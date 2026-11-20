@@ -1,3 +1,16 @@
+package br.com.biblioteca.service;
+
+import br.com.biblioteca.model.Emprestimo;
+import br.com.biblioteca.model.Leitor;
+import br.com.biblioteca.model.Livro;
+import br.com.biblioteca.repository.EmprestimoRepository;
+import br.com.biblioteca.repository.LeitorRepository;
+import br.com.biblioteca.repository.LivroRepository;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.util.List;
