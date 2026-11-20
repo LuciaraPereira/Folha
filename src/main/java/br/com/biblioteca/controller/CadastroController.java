@@ -61,6 +61,118 @@ public class CadastroController {
         this.emprestimos = emprestimos;
         this.service = service;
     }
+
+    // =========================
+    // AUTORES
+    // =========================
+
+    @GetMapping("/autores")
+    public List<Autor> listarAutor() {
+        return service.listar(autores);
+    }
+
+    @GetMapping("/autores/{id}")
+    public Autor buscarAutor(@PathVariable Long id) {
+        return service.buscar(autores, id);
+    }
+
+    @PostMapping("/autores")
+    public Autor criarAutor(@Valid @RequestBody Autor item) {
+        item.id = null;
+        return service.salvar(autores, item);
+    }
+
+    @PutMapping("/autores/{id}")
+    public Autor editarAutor(
+            @PathVariable Long id,
+            @Valid @RequestBody Autor item
+    ) {
+        service.buscar(autores, id);
+        item.id = id;
+
+        return service.salvar(autores, item);
+    }
+
+    @DeleteMapping("/autores/{id}")
+    public void excluirAutor(@PathVariable Long id) {
+        service.excluir(autores, id);
+    }
+
+    // =========================
+    // CATEGORIAS
+    // =========================
+
+    @GetMapping("/categorias")
+    public List<Categoria> listarCategoria() {
+        return service.listar(categorias);
+    }
+
+    @GetMapping("/categorias/{id}")
+    public Categoria buscarCategoria(@PathVariable Long id) {
+        return service.buscar(categorias, id);
+    }
+
+    @PostMapping("/categorias")
+    public Categoria criarCategoria(
+            @Valid @RequestBody Categoria item
+    ) {
+        item.id = null;
+        return service.salvar(categorias, item);
+    }
+
+    @PutMapping("/categorias/{id}")
+    public Categoria editarCategoria(
+            @PathVariable Long id,
+            @Valid @RequestBody Categoria item
+    ) {
+        service.buscar(categorias, id);
+        item.id = id;
+
+        return service.salvar(categorias, item);
+    }
+
+    @DeleteMapping("/categorias/{id}")
+    public void excluirCategoria(@PathVariable Long id) {
+        service.excluir(categorias, id);
+    }
+
+    // =========================
+    // EDITORAS
+    // =========================
+
+    @GetMapping("/editoras")
+    public List<Editora> listarEditora() {
+        return service.listar(editoras);
+    }
+
+    @GetMapping("/editoras/{id}")
+    public Editora buscarEditora(@PathVariable Long id) {
+        return service.buscar(editoras, id);
+    }
+
+    @PostMapping("/editoras")
+    public Editora criarEditora(
+            @Valid @RequestBody Editora item
+    ) {
+        item.id = null;
+        return service.salvar(editoras, item);
+    }
+
+    @PutMapping("/editoras/{id}")
+    public Editora editarEditora(
+            @PathVariable Long id,
+            @Valid @RequestBody Editora item
+    ) {
+        service.buscar(editoras, id);
+        item.id = id;
+
+        return service.salvar(editoras, item);
+    }
+
+    @DeleteMapping("/editoras/{id}")
+    public void excluirEditora(@PathVariable Long id) {
+        service.excluir(editoras, id);
+    }
 }
 
 
