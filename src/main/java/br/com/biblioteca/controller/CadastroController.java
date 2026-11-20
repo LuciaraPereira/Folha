@@ -173,174 +173,61 @@ public class CadastroController {
     public void excluirEditora(@PathVariable Long id) {
         service.excluir(editoras, id);
     }
-}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    // =========================
+    // LEITORES
+    // =========================
+
+    @GetMapping("/leitores")
+    public List<Leitor> listarLeitor() {
+        return service.listar(leitores);
+    }
+
+    @GetMapping("/leitores/{id}")
+    public Leitor buscarLeitor(@PathVariable Long id) {
+        return service.buscar(leitores, id);
+    }
+
+    @PostMapping("/leitores")
+    public Leitor criarLeitor(
+            @Valid @RequestBody Leitor item
+    ) {
+        item.id = null;
+        return salvarLeitor(item);
+    }
+
+    @PutMapping("/leitores/{id}")
+    public Leitor editarLeitor(
+            @PathVariable Long id,
+            @Valid @RequestBody Leitor item
+    ) {
+        service.buscar(leitores, id);
+        item.id = id;
+
+        return salvarLeitor(item);
+    }
+
+    @DeleteMapping("/leitores/{id}")
+    public void excluirLeitor(@PathVariable Long id) {
+
+        service.excluir(leitores, id);
+    }
+
+    private Leitor salvarLeitor(Leitor item) {
+        // Remove pontos, traço e outros caracteres do CPF.
+        item.cpf = item.cpf.replaceAll("\\D", "");
+
+        leitores.findByCpf(item.cpf).ifPresent(outro -> {
+            if (!outro.id.equals(item.id)) {
+                throw new ResponseStatusException(
+                        HttpStatus.CONFLICT,
+                        "CPF já cadastrado para outro leitor"
+                );
+            }
+        });
+
+        return service.salvar(leitores, item);
+    }
 
 
 
@@ -401,7 +288,7 @@ public class CadastroController {
         if (item.id != null && item.exemplares < emprestimos.countByLivroIdAndDataDevolucaoIsNull(item.id)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "A quantidade total não pode ser menor que a quantidade já emprestada.");
-        }      
+        }
         // Remove espaços e traços para comparar o ISBN.
         String isbnInformado = item.isbn
                 .replaceAll("[-\\s]", "")
@@ -435,3 +322,5 @@ public class CadastroController {
 
         return service.salvar(livros, item);
     }
+
+}
