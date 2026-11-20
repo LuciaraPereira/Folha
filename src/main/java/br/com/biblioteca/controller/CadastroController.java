@@ -209,7 +209,24 @@ public class CadastroController {
 
     @DeleteMapping("/leitores/{id}")
     public void excluirLeitor(@PathVariable Long id) {
+        // Confere se o leitor existe.
+        service.buscar(leitores, id);
 
+        if (emprestimos.existsByLeitorIdAndDataDevolucaoIsNull(id)) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Este leitor possui livro emprestado. "
+                            + "Registre a devolução antes de tentar excluí-lo."
+            );
+        }
+
+        if (emprestimos.existsByLeitorId(id)) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Este leitor possui histórico de empréstimos "
+                            + "e não pode ser excluído."
+            );
+        }
         service.excluir(leitores, id);
     }
 
