@@ -38,6 +38,11 @@ public class EmprestimoController {
         return service.criar(item);
     }
 
+    @PutMapping("/{id}/multa/pagamento")
+    public Emprestimo pagarMulta(@PathVariable Long id) {
+        return service.pagarMulta(id);
+    }
+
     @PutMapping("/{id}/devolucao")
     public Emprestimo devolver(@PathVariable Long id) {
         return service.devolver(id);

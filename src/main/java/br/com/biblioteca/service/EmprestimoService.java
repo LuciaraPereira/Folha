@@ -81,3 +81,28 @@ public class EmprestimoService {
 
         return emprestimos.save(emprestimo);
     }
+
+    @Transactional
+    public Emprestimo pagarMulta(Long id) {
+        Emprestimo emprestimo = emprestimos.findById(id)
+                .orElseThrow(
+                        () -> erro("Empréstimo não encontrado")
+                );
+
+        if (emprestimo.getValorMulta().signum() <= 0) {
+            throw erro(
+                    "Este empréstimo não possui multa pendente"
+            );
+        }
+
+        // Se o livro já foi devolvido, a multa termina na data
+        // da devolução. Caso contrário, termina no dia de hoje.
+        emprestimo.dataUltimoPagamento =
+                emprestimo.dataDevolucao == null
+                        ? LocalDate.now()
+                        : emprestimo.dataDevolucao;
+
+        emprestimo.multaPaga = true;
+
+        return emprestimos.save(emprestimo);
+    }
