@@ -1,0 +1,2 @@
+fetch('/api/csrf').then(r=>r.json()).then(t=>document.querySelector('#csrf').value=t.token);
+if(location.search.includes('erro')) document.querySelector('#error').textContent='Usuário ou senha incorretos.';
