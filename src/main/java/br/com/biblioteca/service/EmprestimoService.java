@@ -106,3 +106,48 @@ public class EmprestimoService {
 
         return emprestimos.save(emprestimo);
     }
+
+    @Transactional
+    public Emprestimo renovar(Long id, LocalDate novaData) {
+        Emprestimo emprestimo = emprestimos.findById(id)
+                .orElseThrow(
+                        () -> erro("Empréstimo não encontrado")
+                );
+
+        if (emprestimo.dataDevolucao != null) {
+            throw erro(
+                    "Não é possível renovar um empréstimo devolvido"
+            );
+        }
+
+        if (emprestimo.getValorMulta().signum() > 0) {
+            throw erro("Pague a multa pendente antes de renovar");
+        }
+
+        if (novaData == null
+                || !novaData.isAfter(LocalDate.now())) {
+            throw erro(
+                    "A nova data deve ser posterior a hoje"
+            );
+        }
+
+        if (!novaData.isAfter(emprestimo.dataPrevista)) {
+            throw erro(
+                    "A nova data deve ser posterior ao prazo atual"
+            );
+        }
+
+        emprestimo.dataPrevista = novaData;
+        emprestimo.dataUltimoPagamento = null;
+        emprestimo.multaPaga = false;
+
+        return emprestimos.save(emprestimo);
+    }
+
+    private ResponseStatusException erro(String mensagem) {
+        return new ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                mensagem
+        );
+    }
+}

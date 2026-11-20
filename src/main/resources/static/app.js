@@ -39,30 +39,30 @@ const configs = {
         ]
     },
 
+    livros: {
+        titulo: 'Livros',
+        singular: 'Livro',
+        fields: [
+            ['isbn', 'ISBN'],
+            ['titulo', 'Título'],
+            ['autor', 'Autor', 'select', 'autores'],
+            ['categoria', 'Categoria', 'select', 'categorias'],
+            ['editora', 'Editora', 'select', 'editoras'],
+            ['exemplares', 'Quantidade de exemplares', 'number']
+        ]
+    },
 
+    emprestimos: {
+        titulo: 'Empréstimos',
+        singular: 'Empréstimo',
+        fields: [
+            ['livro', 'Livro', 'select', 'livros'],
+            ['leitor', 'Leitor', 'select', 'leitores'],
+            ['dataPrevista', 'Devolver até', 'date']
+        ]
+    },
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- usuarios: {
+    usuarios: {
         titulo: 'Equipe',
         singular: 'Bibliotecário',
         fields: [
@@ -297,190 +297,190 @@ function campoBusca(texto) {
     `;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  livros: {   // obs:  campo de livros nas linhas 42-53  COMMIT 4 Vivian gomes
-        titulo: 'Livros',
-        singular: 'Livro',
-        fields: [
-            ['isbn', 'ISBN'],
-            ['titulo', 'Título'],
-            ['autor', 'Autor', 'select', 'autores'],
-            ['categoria', 'Categoria', 'select', 'categorias'],
-            ['editora', 'Editora', 'select', 'editoras'],
-            ['exemplares', 'Quantidade de exemplares', 'number']
-        ]
-    },
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+function loanTable(itens) {
+    if (!itens.length) {
+        return `
+            <div class="empty">
+                Ainda não há registros por aqui.
+            </div>
+        `;
+    }
+
+    return `
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>LIVRO</th>
+                        <th>LEITOR</th>
+                        <th>PREVISÃO</th>
+                        <th>STATUS</th>
+                        <th>MULTA</th>
+                        <th>AÇÕES</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    ${itens.map(item => `
+                        <tr>
+                            <td>${esc(item.livro?.titulo)}</td>
+
+                            <td>
+                                ${esc(item.leitor?.nome)}
+                                <br>
+                                <small>
+                                    ${esc(
+        item.leitor?.cpf ||
+        'CPF não informado'
+    )}
+                                </small>
+                            </td>
+
+                            <td>${esc(item.dataPrevista)}</td>
+
+                            <td>
+                                <span class="badge">
+                                    ${
+        item.dataDevolucao
+            ? 'Devolvido'
+            : Number(item.valorMulta) > 0
+                ? 'Em atraso'
+                : 'Em aberto'
+    }
+                                </span>
+                            </td>
+
+                            <td>${dinheiro(item.valorMulta)}</td>
+
+                            <td>
+                                ${
+        !item.dataDevolucao
+            ? `
+                                            <button onclick="renovar(${item.id})">
+                                                Renovar
+                                            </button>
+
+                                            <button onclick="devolver(${item.id})">
+                                                Devolver
+                                            </button>
+                                        `
+            : ''
+    }
+                            </td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        </div>
+    `;
+}
+
+async function multas() {
+    const emprestimos = await api('emprestimos');
+
+    const itens = emprestimos.filter(
+        item => Number(item.valorMulta) > 0
+    );
+
+    document.querySelector('#content').innerHTML = `
+        <div class="panel">
+            <div class="panel-head">
+                <div>
+                    <h2>Multas por atraso</h2>
+
+                    <p>
+                        R$ 1,00 por dia de atraso.
+                        Pague a multa antes de renovar o empréstimo.
+                    </p>
+                </div>
+            </div>
+
+            ${campoBusca('Pesquisar pelo nome ou CPF do leitor')}
+
+            ${
+        itens.length
+            ? `
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>LEITOR</th>
+                                        <th>LIVRO</th>
+                                        <th>VALOR</th>
+                                        <th>STATUS</th>
+                                        <th>AÇÃO</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    ${itens.map(item => `
+                                        <tr>
+                                            <td>
+                                                ${esc(item.leitor?.nome)}
+                                                <br>
+                                                <small>
+                                                    ${esc(
+                item.leitor?.cpf ||
+                'CPF não informado'
+            )}
+                                                </small>
+                                            </td>
+
+                                            <td>
+                                                ${esc(item.livro?.titulo)}
+                                            </td>
+
+                                            <td>
+                                                ${dinheiro(item.valorMulta)}
+                                            </td>
+
+                                            <td>
+                                                <span class="badge">
+                                                    Pendente
+                                                </span>
+                                            </td>
+
+                                            <td>
+                                                <button
+                                                    onclick="pagarMulta(${item.id})"
+                                                >
+                                                    Registrar pagamento
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    `
+            : `
+                        <div class="empty">
+                            Nenhuma multa pendente.
+                        </div>
+                    `
+    }
+        </div>
+    `;
+}
+
+async function pagarMulta(id) {
+    if (!confirm('Confirmar o pagamento desta multa?')) {
+        return;
+    }
+
+    try {
+        await api(
+            'emprestimos/' + id + '/multa/pagamento',
+            { method: 'PUT' }
+        );
+
+        notice('Pagamento da multa registrado.');
+        await show('multas');
+
+    } catch (erro) {
+        notice(erro.message, true);
+    }
+}
 
 async function list(page) {
     const data = cache[page] = await api(page);
@@ -522,20 +522,20 @@ async function list(page) {
                                     ${colunas.map(campo => `
                                         <td>
                                             ${esc(
-                                                typeof item[campo[0]] === 'object'
-                                                    ? (
-                                                        item[campo[0]]?.nome ||
-                                                        item[campo[0]]?.titulo
-                                                    )
-                                                    : item[campo[0]]
-                                            )}
+                typeof item[campo[0]] === 'object'
+                    ? (
+                        item[campo[0]]?.nome ||
+                        item[campo[0]]?.titulo
+                    )
+                    : item[campo[0]]
+            )}
                                         </td>
                                     `).join('')}
 
                                     <td>
                                         ${
-                                            page !== 'usuarios' || item.perfil === 'BIBLIOTECARIO'
-                                                ? `
+                page !== 'usuarios' || item.perfil === 'BIBLIOTECARIO'
+                    ? `
                                                     <button
                                                         onclick="openForm('${page}', ${item.id})"
                                                     >
@@ -548,8 +548,8 @@ async function list(page) {
                                                         Excluir
                                                     </button>
                                                 `
-                                                : '—'
-                                        }
+                    : '—'
+            }
                                     </td>
                                 </tr>
                             `).join('')}
@@ -630,23 +630,23 @@ async function openForm(page, id) {
                             <option
                                 value="${registro.id}"
                                 ${
-                                    item[chave]?.id === registro.id
-                                        ? 'selected'
-                                        : ''
-                                }
+                    item[chave]?.id === registro.id
+                        ? 'selected'
+                        : ''
+                }
                             >
                                 ${esc(
-                                    (registro.nome || registro.titulo) +
-                                    (
-                                        referencia === 'leitores'
-                                            ? ' · CPF: ' +
-                                                (
-                                                    registro.cpf ||
-                                                    'não informado'
-                                                )
-                                            : ''
-                                    )
-                                )}
+                    (registro.nome || registro.titulo) +
+                    (
+                        referencia === 'leitores'
+                            ? ' · CPF: ' +
+                            (
+                                registro.cpf ||
+                                'não informado'
+                            )
+                            : ''
+                    )
+                )}
                             </option>
                         `).join('')}
                     </select>
@@ -658,34 +658,34 @@ async function openForm(page, id) {
                         name="${chave}"
                         type="${tipo || 'text'}"
                         value="${esc(
-                            item[chave] ??
-                            (chave === 'exemplares' ? 1 : '')
-                        )}"
+                    item[chave] ??
+                    (chave === 'exemplares' ? 1 : '')
+                )}"
                         ${tipo === 'number' ? 'min="1"' : ''}
                         ${page === 'usuarios' && id && chave === 'senha' ? '' : 'required'}
                     >
                 `;
             }
 
+            if (chave === 'isbn') {
+                return `
+                    <div class="inline">
+                        <label>
+                            ${label}
+                            ${input}
+                        </label>
 
+                        <button
+                            type="button"
+                            onclick="buscarIsbn()"
+                        >
+                            Buscar ISBN
+                        </button>
+                    </div>
+                `;
+            }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-           return `
+            return `
                 <label>
                     ${label}
                     ${input}
@@ -707,556 +707,10 @@ async function openForm(page, id) {
             for (
                 const [chave, label, tipo, referencia]
                 of config.fields
-            ) {
+                ) {
                 const valor = form.elements[chave].value;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        else if (tipo === 'select') {
-                            body[chave] = { id: Number(valor) };
-
-                        } else if (tipo === 'number') {
-                            body[chave] = Number(valor);
-
-                        } else {
-                            body[chave] = valor;
-                        }
-                    }
-
-                    await api(
-                        page + (id ? '/' + id : ''),
-                        {
-                            method: id ? 'PUT' : 'POST',
-                            body: JSON.stringify(body)
-                        }
-                    );
-
-                    document.querySelector('#modal').close();
-
-                    notice('Registro salvo com sucesso.');
-                    await show(page);
-
-                } catch (erro) {
-                    alert(erro.message);
-                }
-            };
-
-            document.querySelector('#modal').showModal();
-        }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-async function removeItem(page, id) {
-    if (!confirm('Excluir este registro?')) {
-        return;
-    }
-
-    try {
-        await api(page + '/' + id, {
-            method: 'DELETE'
-        });
-
-        notice('Registro excluído.');
-        await show(page);
-
-    } catch (erro) {
-        notice(erro.message, true);
-    }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-document.querySelector('#logout').onclick = async () => {
-    const form = document.createElement('form');
-
-    form.method = 'POST';
-    form.action = '/logout';
-
-    form.innerHTML = `
-        <input
-            type="hidden"
-            name="_csrf"
-            value="${esc(csrf)}"
-        >
-    `;
-
-    document.body.appendChild(form);
-    form.submit();
-};
-
-start().catch(erro => notice(erro.message, true));
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-if (chave === 'isbn') {  // obs:  trechos do formulário para ISBN e sugestões nas linhas 670-685  COMMIT 4 Vivian gomes
-                return `
-                    <div class="inline">
-                        <label>
-                            ${label}
-                            ${input}
-                        </label>
-
-                        <button
-                            type="button"
-                            onclick="buscarIsbn()"
-                        >
-                            Buscar ISBN
-                        </button>
-                    </div>
-                `;
-            }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-               if ( // obs:  sugestões nas linhas  713-738 COMMIT 4 Vivian gomes
+                if (
                     tipo === 'select' &&
                     valor.startsWith('novo:')
                 ) {
@@ -1283,39 +737,39 @@ if (chave === 'isbn') {  // obs:  trechos do formulário para ISBN e sugestões 
 
                     body[chave] = { id: criado.id };
 
+                } else if (tipo === 'select') {
+                    body[chave] = { id: Number(valor) };
 
+                } else if (tipo === 'number') {
+                    body[chave] = Number(valor);
 
+                } else {
+                    body[chave] = valor;
+                }
+            }
 
+            await api(
+                page + (id ? '/' + id : ''),
+                {
+                    method: id ? 'PUT' : 'POST',
+                    body: JSON.stringify(body)
+                }
+            );
 
+            document.querySelector('#modal').close();
 
+            notice('Registro salvo com sucesso.');
+            await show(page);
 
+        } catch (erro) {
+            alert(erro.message);
+        }
+    };
 
+    document.querySelector('#modal').showModal();
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-function selecionarSugestao(select, nome) {  // Linha 772 COMMIT 4 Vivian gomes
+function selecionarSugestao(select, nome) {
     if (!nome || !nome.trim()) {
         return false;
     }
@@ -1392,137 +846,137 @@ async function buscarIsbn() {
     } catch (erro) {
         alert(erro.message);
     }
-} // Linha 849 COMMIT 4 Vivian gomes
+}
 
+async function removeItem(page, id) {
+    if (!confirm('Excluir este registro?')) {
+        return;
+    }
 
+    try {
+        await api(page + '/' + id, {
+            method: 'DELETE'
+        });
 
+        notice('Registro excluído.');
+        await show(page);
 
+    } catch (erro) {
+        notice(erro.message, true);
+    }
+}
 
+async function renovar(id) {
+    const modal = document.querySelector('#modal');
+    const titulo = document.querySelector('#modal-title');
+    const form = document.querySelector('#form');
 
+    titulo.textContent = 'Renovar empréstimo';
+
+    // Monta a data de hoje no formato usado pelo campo de data.
+    const hoje = new Date();
 
+    const ano = hoje.getFullYear();
+    const mes = String(hoje.getMonth() + 1).padStart(2, '0');
+    const dia = String(hoje.getDate()).padStart(2, '0');
 
+    const dataMinima = `${ano}-${mes}-${dia}`;
 
+    form.innerHTML = `
+        <p>Escolha a nova data de devolução para o empréstimo.</p>
 
+        <label for="novaData">
+            Nova data de devolução
 
+            <input
+                id="novaData"
+                name="novaData"
+                type="date"
+                min="${dataMinima}"
+                required
+            >
+        </label>
 
+        <p id="erroRenovacao" class="error"></p>
 
+        <button type="submit">
+            Confirmar renovação
+        </button>
+    `;
 
+    form.onsubmit = async evento => {
+        evento.preventDefault();
 
+        const novaData = form.elements.novaData.value;
+        const mensagemErro = form.querySelector('#erroRenovacao');
+        const botao = form.querySelector('button[type="submit"]');
 
+        mensagemErro.textContent = '';
+        botao.disabled = true;
 
+        try {
+            await api(
+                'emprestimos/' + id + '/renovacao',
+                {
+                    method: 'PUT',
+                    body: JSON.stringify({ novaData })
+                }
+            );
 
+            modal.close();
 
+            notice('Empréstimo renovado com sucesso.');
 
+            await show(current);
 
+        } catch (erro) {
+            mensagemErro.textContent = erro.message;
 
+        } finally {
+            botao.disabled = false;
+        }
+    };
 
+    modal.showModal();
+}
 
+async function devolver(id) {
+    try {
+        await api(
+            'emprestimos/' + id + '/devolucao',
+            { method: 'PUT' }
+        );
 
+        notice('Devolução registrada.');
+        await show(current);
 
+    } catch (erro) {
+        notice(erro.message, true);
+    }
+}
 
+document.querySelector('#logout').onclick = async () => {
+    const form = document.createElement('form');
 
+    form.method = 'POST';
+    form.action = '/logout';
 
+    form.innerHTML = `
+        <input
+            type="hidden"
+            name="_csrf"
+            value="${esc(csrf)}"
+        >
+    `;
 
+    document.body.appendChild(form);
+    form.submit();
+};
 
+start().catch(erro => notice(erro.message, true));
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-const campoQuantidade = configs.livros.fields.find( // obs: app.js linhas 979-1114 ao final do arquivo COMMIT 5 Vivian gomes
+// Troca o nome do campo no cadastro e na edição.
+const campoQuantidade = configs.livros.fields.find(
     campo => campo[0] === 'exemplares'
 );
 
@@ -1530,7 +984,7 @@ if (campoQuantidade) {
     campoQuantidade[1] = 'Quantidade total';
 }
 
-
+// Permite pesquisar CPF e ISBN com ou sem pontuação.
 filtrarTabela = function (input) {
     const termo = input.value
         .trim()
@@ -1560,10 +1014,10 @@ filtrarTabela = function (input) {
         });
 };
 
-
+// Guarda a função original que monta as listas.
 const listarOriginal = list;
 
-
+// Atualiza a lista de livros com as quantidades disponíveis.
 list = async function (page) {
     await listarOriginal(page);
 
@@ -1610,7 +1064,7 @@ list = async function (page) {
             'QUANTIDADE DISPONÍVEL';
     }
 
-    
+    // Adiciona a coluna de status antes da coluna de ações.
     const cabecalhoStatus = document.createElement('th');
     cabecalhoStatus.textContent = 'STATUS';
 

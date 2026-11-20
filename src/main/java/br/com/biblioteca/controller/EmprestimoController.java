@@ -47,3 +47,12 @@ public class EmprestimoController {
     public Emprestimo devolver(@PathVariable Long id) {
         return service.devolver(id);
     }
+
+    @PutMapping("/{id}/renovacao")
+    public Emprestimo renovar(
+            @PathVariable Long id,
+            @RequestBody Renovacao dados
+    ) {
+        return service.renovar(id, dados.novaData());
+    }
+}
