@@ -1,0 +1,517 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap');
+:root {
+    --ink: #24372e;
+    --muted: #79877e;
+    --green: #234e3d;
+    --line: #e5ebe5;
+    --paper: #f6f8f3;
+    --lime: #dceabf;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    color: var(--ink);
+    background: var(--paper);
+    font-family: 'DM Sans',sans-serif;
+}
+
+button,input,select {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+h1,h2,h3 {
+    font-family: 'DM Serif Display',serif;
+    font-weight: 400;
+    margin: 0;
+}
+
+p {
+    color: var(--muted);
+    line-height: 1.6;
+}
+
+h1 {
+    font-size: 38px;
+}
+
+h2 {
+    font-size: 26px;
+}
+
+.eyebrow,.side-label {
+    font-size: 10px;
+    letter-spacing: .18em;
+    color: #87988c;
+    font-weight: 700;
+}
+
+.layout {
+    min-height: 100vh;
+    display: flex;
+}
+
+aside {
+    width: 245px;
+    background: #fff;
+    border-right: 1px solid var(--line);
+    padding: 35px 22px;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    inset: 0 auto 0 0;
+}
+
+.brand {
+    font-family: 'DM Serif Display';
+    font-size: 32px;
+    color: var(--green);
+    line-height: 1;
+}
+
+.brand b,.mark {
+    display: inline-grid;
+    place-items: center;
+    background: var(--green);
+    color: #e2efcb;
+    border-radius: 12px;
+    width: 42px;
+    height: 42px;
+    font-family: sans-serif;
+}
+
+.brand span {
+    display: block;
+    margin: 7px 0 44px 49px;
+    font: 10px 'DM Sans';
+    letter-spacing: .06em;
+    color: var(--muted);
+}
+
+.side-label {
+    margin: 0 12px 13px;
+}
+
+nav {
+    display: grid;
+    gap: 5px;
+}
+
+nav button {
+    border: 0;
+    background: none;
+    text-align: left;
+    padding: 13px;
+    border-radius: 9px;
+    color: #75857b;
+}
+
+nav button.active {
+    background: #e9f1e4;
+    color: var(--green);
+    font-weight: 700;
+}
+
+.side-bottom {
+    margin-top: auto;
+    border-top: 1px solid var(--line);
+    padding: 23px 12px 0;
+    line-height: 1.7;
+    font-family: 'DM Serif Display';
+    color: #65816c;
+}
+
+.link {
+    border: 0;
+    background: none;
+    padding: 25px 0 0;
+    color: #87988c;
+    font: 12px 'DM Sans';
+}
+
+.main {
+    margin-left: 245px;
+    width: calc(100% - 245px);
+    padding: 52px 6% 25px;
+    max-width: 1600px;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 36px;
+}
+
+header h1 {
+    margin-top: 8px;
+}
+
+header p {
+    margin: 6px 0;
+}
+
+.user {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 30px;
+    padding: 11px 18px;
+    font-size: 13px;
+}
+
+.hero {
+    background: var(--green);
+    color: #fff;
+    border-radius: 17px;
+    padding: 30px 34px;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero:after {
+    content: '✳';
+    position: absolute;
+    font-size: 190px;
+    right: 30px;
+    top: -42px;
+    color: #ffffff0c;
+}
+
+.hero .eyebrow {
+    color: #b8d3b7;
+}
+
+.hero h2 {
+    font-size: 31px;
+    margin: 9px 0;
+}
+
+.hero p {
+    color: #c6d7c9;
+    margin: 0;
+    max-width: 520px;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 18px;
+    margin: 22px 0;
+}
+
+.stat,.panel {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 24px;
+}
+
+.stat span {
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.stat strong {
+    display: block;
+    font-family: 'DM Serif Display';
+    font-weight: 400;
+    font-size: 35px;
+    margin-top: 9px;
+}
+
+.panel-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.panel-head p {
+    margin: 5px 0 0;
+    font-size: 13px;
+}
+
+.primary,form button {
+    border: 0;
+    background: var(--green);
+    color: white;
+    border-radius: 9px;
+    padding: 13px 18px;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.primary:hover,form button:hover {
+    background: #31644e;
+}
+
+.table-wrap {
+    overflow: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 13px;
+}
+
+th {
+    font-size: 10px;
+    letter-spacing: .12em;
+    color: #98a69b;
+    padding: 12px;
+    border-bottom: 1px solid var(--line);
+}
+
+td {
+    padding: 16px 12px;
+    border-bottom: 1px solid #eff2ed;
+}
+
+td button {
+    border: 0;
+    background: #eff4ed;
+    color: var(--green);
+    padding: 7px 10px;
+    border-radius: 6px;
+    margin-right: 5px;
+    font-size: 12px;
+}
+
+.badge {
+    display: inline-block;
+    background: #e8f3df;
+    color: #507654;
+    padding: 6px 9px;
+    border-radius: 20px;
+    font-size: 11px;
+}
+
+.empty {
+    text-align: center;
+    padding: 38px;
+    color: var(--muted);
+}
+
+footer {
+    font-size: 9px;
+    letter-spacing: .12em;
+    color: #a0aea3;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 36px;
+}
+
+dialog {
+    border: 0;
+    border-radius: 16px;
+    padding: 28px;
+    width: min(530px,92vw);
+    box-shadow: 0 20px 70px #1d322b44;
+}
+
+dialog::backdrop {
+    background: #1c3028a6;
+}
+
+.modal-head {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.modal-head h2 {
+    margin-top: 6px;
+}
+
+.close {
+    border: 0;
+    background: none;
+    font-size: 27px;
+    color: var(--muted);
+}
+
+form label {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    margin: 14px 0;
+    color: #536a5a;
+}
+
+input,select {
+    display: block;
+    width: 100%;
+    margin-top: 8px;
+    padding: 12px;
+    border: 1px solid #dbe4da;
+    border-radius: 8px;
+    background: #fff;
+    color: var(--ink);
+}
+
+form button {
+    width: 100%;
+    margin-top: 12px;
+}
+
+.inline {
+    display: flex;
+    gap: 8px;
+    align-items: end;
+}
+
+.inline label {
+    flex: 1;
+}
+
+.inline button {
+    width: auto;
+    margin-bottom: 14px;
+    white-space: nowrap;
+}
+
+.notice {
+    padding: 14px;
+    border-radius: 8px;
+    background: #e8f3df;
+    margin-bottom: 16px;
+}
+
+.notice.error {
+    background: #ffedeb;
+    color: #a54235;
+}
+
+.login-page {
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+    background: #e9efe4;
+}
+
+.login-card {
+    background: white;
+    border-radius: 20px;
+    padding: 50px;
+    width: min(460px,92vw);
+    box-shadow: 0 20px 70px #38504316;
+}
+
+.login-card .mark {
+    margin-bottom: 30px;
+}
+
+.login-card h1 {
+    font-size: 42px;
+    line-height: 1.1;
+    margin: 12px 0;
+}
+
+.login-card form {
+    margin-top: 28px;
+}
+
+.login-card form button span {
+    float: right;
+}
+
+.login-card small {
+    display: block;
+    margin-top: 35px;
+    color: #a8b5a9;
+    letter-spacing: .13em;
+    font-size: 9px;
+}
+
+.error {
+    color: #b34438;
+    font-size: 12px;
+}
+
+@media(max-width:750px) {
+    aside {
+        position: static;
+        width: 100%;
+        padding: 20px;
+    }
+
+    .layout {
+        display: block;
+    }
+
+    .brand span,.side-label,.side-bottom div {
+        display: none;
+    }
+
+    nav {
+        display: flex;
+        overflow: auto;
+        margin-top: 20px;
+    }
+
+    nav button {
+        white-space: nowrap;
+    }
+
+    .side-bottom {
+        padding: 0;
+        border: 0;
+    }
+
+    .link {
+        padding: 10px;
+    }
+
+    .main {
+        margin: 0;
+        width: 100%;
+        padding: 30px 20px;
+    }
+
+    .stats {
+        grid-template-columns: 1fr;
+    }
+
+    header h1 {
+        font-size: 30px;
+    }
+
+    .user {
+        display: none;
+    }
+
+    footer span {
+        display: none;
+    }
+
+}
+
+/* Organiza os botões de ação das tabelas */
+
+td:last-child {
+    white-space: nowrap;
+}
+
+td:last-child button {
+    display: inline-block;
+    margin: 4px;
+    padding: 8px 12px;
+}
+
+
+
+.notice.error {
+    background-color: #ffedeb;
+    color: #a1271c;
+    border: 1px solid #e7a49d;
+    font-weight: 600;
+}
