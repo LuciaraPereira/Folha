@@ -98,7 +98,7 @@ Senha: definida na variável ADMIN_PASSWORD
 
 ## 🔗 Links
 
-- **Aplicação publicada:** [https://folha-8ygy.onrender.com/?classId=3c3c5fc4-a93d-4e3e-b194-b0e99b81a7a2&assignmentId=7ff1c3de-65f4-4ab6-9a16-102c1f784b79&submissionId=6d477f5e-f726-e987-da7c-6bc84e6c3a7e](https://folha-8ygy.onrender.com/?classId=3c3c5fc4-a93d-4e3e-b194-b0e99b81a7a2&assignmentId=7ff1c3de-65f4-4ab6-9a16-102c1f784b79&submissionId=6d477f5e-f726-e987-da7c-6bc84e6c3a7e)
+- **Aplicação publicada:** [Folha - Acesse aqui](https://folha-8ygy.onrender.com/?classId=3c3c5fc4-a93d-4e3e-b194-b0e99b81a7a2&assignmentId=7ff1c3de-65f4-4ab6-9a16-102c1f784b79&submissionId=6d477f5e-f726-e987-da7c-6bc84e6c3a7e)
 - **Documentação Swagger:** [http://localhost:8081/swagger-ui/index.html](http://localhost:8081/swagger-ui/index.html)
 
 Para acessar o Swagger localmente, a aplicação deve estar em execução e o usuário deve estar autenticado.
