@@ -101,4 +101,6 @@ Senha: definida na variável ADMIN_PASSWORD
 - **Aplicação publicada:** [Folha - Acesse aqui](https://folha-8ygy.onrender.com/?classId=3c3c5fc4-a93d-4e3e-b194-b0e99b81a7a2&assignmentId=7ff1c3de-65f4-4ab6-9a16-102c1f784b79&submissionId=6d477f5e-f726-e987-da7c-6bc84e6c3a7e)
 - **Documentação Swagger:** [http://localhost:8081/swagger-ui/index.html](http://localhost:8081/swagger-ui/index.html)
 
+> **Observação:** 
+Como a aplicação está hospedada no plano gratuito do Render, ela pode entrar em modo de inatividade após um período sem acesso. Ao abri-la novamente, pode ser necessário aguardar alguns instantes para que o servidor seja iniciado e o sistema carregue.
 Para acessar o Swagger localmente, a aplicação deve estar em execução e o usuário deve estar autenticado.
